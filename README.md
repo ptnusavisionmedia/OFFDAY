@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OFFDAY
 
-## Getting Started
+Toko pakaian online bergaya editorial, dibangun di sekitar komponen `ClothingRailHero` (rak pakaian interaktif).
 
-First, run the development server:
+## Tech stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 16 (App Router, Cache Components) + React 19 + TypeScript
+- Tailwind CSS v4 + shadcn/ui (style `base-nova`, komponen di `src/components/ui`)
+- Zustand (keranjang, tersimpan di localStorage), Sonner (toast), lucide-react
+- Font: Instrument Serif (judul), Geist & Geist Mono (isi, label)
+
+## Menjalankan
+
+```powershell
+npm install
+npm run dev      # http://localhost:3000
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Struktur
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/app/                  beranda, /koleksi, /produk/[slug]
+src/components/ui/        shadcn + product-rail-gallery.tsx (komponen rak, tidak diubah)
+src/components/site/      header, footer, kartu produk, galeri, keranjang
+src/lib/products.ts       data produk (satu sumber untuk rak, grid, dan halaman produk)
+src/lib/cart.ts           state keranjang + pesan WhatsApp
+public/products/          foto placeholder (depan, belakang, samping)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Yang perlu Anda ganti sebelum rilis
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Foto produk** di `public/products/` masih foto demo komponen. Pakai cut-out transparan dengan kanvas portrait 200 × 310; depan, belakang, dan samping harus berkanvas dan berskala sama.
+2. **Nomor WhatsApp**: salin `.env.example` menjadi `.env.local` lalu isi `NEXT_PUBLIC_WA_NUMBER` (format `62812...`). Checkout saat ini mengirim isi keranjang ke WhatsApp.
+3. **Teks, harga, stok, dan klaim** (ongkir, penukaran 14 hari, spesifikasi bahan) adalah contoh. Sesuaikan di `src/lib/products.ts` dan `src/app/page.tsx`.
+4. **Newsletter** belum terhubung ke penyedia email (`src/components/site/newsletter-form.tsx`).
+5. Untuk pembayaran online sungguhan, sambungkan penyedia pembayaran (misalnya Midtrans atau Xendit) dan ganti tombol WhatsApp di `cart-sheet.tsx`.
